@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><style>
+.kpis{display:flex; gap:16px; margin-bottom:18px;}
+.kpi{flex:1;}
+.bar-wrap{display:flex; align-items:flex-end; gap:14px; height:140px; margin-top:10px; padding-top:10px;}
+.bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+.bar{width:100%; background:linear-gradient(180deg,#1B7A73,#0E5E59); border-radius:6px 6px 0 0;}
+.bar-label{font-size:10.5px; color:#8AA6A2; margin-top:6px;}
+.lga-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #EEF3F2; font-size:12.5px;}
+.lga-row:last-child{border-bottom:none;}
+.lga-name{font-weight:bold; color:#17302D;}
+.lga-bar-bg{width:140px; height:6px; background:#EAF2F0; border-radius:4px; overflow:hidden;}
+.lga-bar-fg{height:100%; background:#0E5E59;}
+</style></head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div>
+    </div>
+    <div class="nav-item"><span class="nav-dot"></span> Facility Overview</div>
+    <div class="nav-item active"><span class="nav-dot"></span> State Reports</div>
+    <div class="nav-item"><span class="nav-dot"></span> Users &amp; Facilities</div>
+    <div class="nav-item"><span class="nav-dot"></span> Notifications Log</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title">State-Level Reporting</div>
+        <div class="page-sub">Bauchi State Ministry of Health &middot; All Facilities</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-pill"><span class="status-dot"></span> 99.1% Uptime (30d)</div>
+        <div class="avatar">HO</div>
+      </div>
+    </div>
+
+    <div class="kpis">
+      <div class="card kpi"><div class="card-label">Appointments (30d)</div><div class="stat-num">4,382</div><div class="stat-note">Across 20 LGAs</div></div>
+      <div class="card kpi"><div class="card-label">Scheduling Conflict Rate</div><div class="stat-num">3.1%</div><div class="stat-note">Target: below 5%</div></div>
+      <div class="card kpi"><div class="card-label">Avg. API Response Time</div><div class="stat-num">241ms</div><div class="stat-note">Target: under 300ms</div></div>
+      <div class="card kpi"><div class="card-label">SUS Usability Score</div><div class="stat-num">76.4</div><div class="stat-note">Target: above 70</div></div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-label">Weekly Appointment Volume</div>
+          <div class="bar-wrap">
+            <div class="bar-col"><div class="bar" style="height:52%;"></div><div class="bar-label">Mon</div></div>
+            <div class="bar-col"><div class="bar" style="height:68%;"></div><div class="bar-label">Tue</div></div>
+            <div class="bar-col"><div class="bar" style="height:74%;"></div><div class="bar-label">Wed</div></div>
+            <div class="bar-col"><div class="bar" style="height:91%;"></div><div class="bar-label">Thu</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%;"></div><div class="bar-label">Fri</div></div>
+            <div class="bar-col"><div class="bar" style="height:34%;"></div><div class="bar-label">Sat</div></div>
+            <div class="bar-col"><div class="bar" style="height:19%;"></div><div class="bar-label">Sun</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col col-narrow">
+        <div class="card">
+          <div class="card-label">Facility Usage by LGA</div>
+          <div class="lga-row"><span class="lga-name">Bauchi</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:88%;"></div></div></div>
+          <div class="lga-row"><span class="lga-name">Ningi</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:54%;"></div></div></div>
+          <div class="lga-row"><span class="lga-name">Ganjuwa</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:41%;"></div></div></div>
+          <div class="lga-row"><span class="lga-name">Kafin Zaki</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:23%;"></div></div></div>
+          <div class="lga-row"><span class="lga-name">Misau</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:37%;"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Recent Referrals Across Facilities</div>
+      <table>
+        <tr><th>Patient</th><th>From</th><th>To</th><th>Reason</th><th>Status</th></tr>
+        <tr><td>Halima Sani</td><td>Ningi PHC</td><td>ATBUTH Bauchi</td><td>Specialist review</td><td><span class="tag tag-amber">Pending</span></td></tr>
+        <tr><td>Emeka Obi</td><td>Ganjuwa PHC</td><td>ATBUTH Bauchi</td><td>Lab escalation</td><td><span class="tag tag-green">Accepted</span></td></tr>
+        <tr><td>Yakubu Danladi</td><td>Kafin Zaki PHC</td><td>Misau General</td><td>Emergency transfer</td><td><span class="tag tag-blue">In Transit</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+</body></html>

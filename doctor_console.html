@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><style>
+.queue{width:260px; flex:none;}
+.q-item{padding:12px; border-radius:10px; margin-bottom:8px; border:1px solid #E3ECEA;}
+.q-item.sel{background:#EAF4F2; border-color:#0E5E59;}
+.q-name{font-size:12.5px; font-weight:bold; color:#17302D;}
+.q-meta{font-size:11px; color:#5C7A76; margin-top:2px;}
+.detail{flex:1;}
+.patient-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;}
+.p-name{font-family:'DejaVu Serif',serif; font-size:19px; color:#0B2E2A;}
+.p-meta{font-size:12px; color:#5C7A76; margin-top:3px;}
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:11.5px; color:#3E5854; margin-bottom:6px; font-weight:bold;}
+.field textarea, .field input{
+  width:100%; padding:10px 12px; border:1px solid #CFE0DC; border-radius:8px; font-size:13px; color:#17302D; background:#fff; font-family:inherit;
+}
+.hist-item{border-left:2px solid #CFE6E1; padding:2px 0 12px 14px; margin-left:4px; position:relative;}
+.hist-item:before{content:""; width:8px; height:8px; border-radius:50%; background:#0E5E59; position:absolute; left:-5px; top:3px;}
+.hist-title{font-size:12.5px; font-weight:bold; color:#17302D;}
+.hist-meta{font-size:11px; color:#8AA6A2;}
+</style></head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div>
+    </div>
+    <div class="nav-item active"><span class="nav-dot"></span> My Queue</div>
+    <div class="nav-item"><span class="nav-dot"></span> Patient Records</div>
+    <div class="nav-item"><span class="nav-dot"></span> Referrals</div>
+    <div class="nav-item"><span class="nav-dot"></span> Consultations</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Today's Queue</div>
+        <div class="page-sub">Dr. Bello Suleiman &middot; General Medicine &middot; ATBUTH Bauchi</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-pill"><span class="status-dot"></span> Synced &middot; Online</div>
+        <div class="avatar">BS</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="queue">
+        <div class="card" style="padding:14px;">
+          <div class="card-label" style="margin-bottom:10px;">6 Patients &middot; Thursday</div>
+          <div class="q-item sel"><div class="q-name">Amina Ibrahim</div><div class="q-meta">10:30 AM &middot; Follow-up</div></div>
+          <div class="q-item"><div class="q-name">Yakubu Danladi</div><div class="q-meta">11:00 AM &middot; New complaint</div></div>
+          <div class="q-item"><div class="q-name">Halima Sani</div><div class="q-meta">1:00 PM &middot; Referral review</div></div>
+          <div class="q-item"><div class="q-name">Emeka Obi</div><div class="q-meta">2:30 PM &middot; Lab review</div></div>
+        </div>
+      </div>
+      <div class="detail">
+        <div class="card">
+          <div class="patient-head">
+            <div>
+              <div class="p-name">Amina Ibrahim</div>
+              <div class="p-meta">PT-04821 &middot; 27F &middot; Ningi LGA &middot; Antenatal Checkup</div>
+            </div>
+            <span class="tag tag-blue">RBAC: Doctor Access</span>
+          </div>
+
+          <div class="row" style="gap:16px;">
+            <div class="col">
+              <div class="field"><label>Diagnosis</label><textarea rows="2">Routine antenatal follow-up, 28 weeks. Blood pressure and weight within normal range.</textarea></div>
+              <div class="field"><label>Prescription</label><textarea rows="2">Continue folic acid and iron supplementation. Return in 4 weeks.</textarea></div>
+              <div style="display:flex; gap:10px;">
+                <button class="btn">Save Consultation</button>
+                <button class="btn-ghost">Refer to Another Facility</button>
+              </div>
+            </div>
+            <div class="col-narrow" style="width:260px;">
+              <div class="card-label">Consultation History</div>
+              <div class="hist-item"><div class="hist-title">Antenatal Checkup</div><div class="hist-meta">Ningi PHC &middot; 02 Jul 2026</div></div>
+              <div class="hist-item"><div class="hist-title">Malaria &mdash; Treated</div><div class="hist-meta">ATBUTH &middot; 14 Aug 2026</div></div>
+              <div class="hist-item"><div class="hist-title">Referred from Ningi PHC</div><div class="hist-meta">28 Jun 2026</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>

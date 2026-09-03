@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><style>
+.form-grid{display:flex; gap:18px;}
+.field{margin-bottom:16px;}
+.field label{display:block; font-size:11.5px; color:#3E5854; margin-bottom:6px; font-weight:bold;}
+.field select, .field input{
+  width:100%; padding:10px 12px; border:1px solid #CFE0DC; border-radius:8px; font-size:13px; color:#17302D; background:#fff;
+}
+.slots{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+.slot{padding:9px 14px; border:1px solid #CFE0DC; border-radius:8px; font-size:12px; color:#3E5854; background:#fff;}
+.slot.taken{color:#B9C7C4; background:#F1F5F4; text-decoration:line-through;}
+.slot.sel{background:#0E5E59; color:#fff; border-color:#0E5E59; font-weight:bold;}
+.summary-row{display:flex; justify-content:space-between; font-size:12.5px; padding:9px 0; border-bottom:1px solid #EEF3F2;}
+.summary-row:last-child{border-bottom:none;}
+.summary-row b{color:#0B2E2A;}
+.conflict-banner{
+  background:#FCEFE0; border:1px solid #F1C68C; color:#8A4A15; border-radius:10px;
+  padding:11px 14px; font-size:12px; margin-bottom:16px; display:flex; gap:8px; align-items:center;
+}
+</style></head>
+<body>
+<div class="shell">
+  <div class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">C</div>
+      <div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div>
+    </div>
+    <div class="nav-item"><span class="nav-dot"></span> Dashboard</div>
+    <div class="nav-item active"><span class="nav-dot"></span> Appointments</div>
+    <div class="nav-item"><span class="nav-dot"></span> Medical Records</div>
+    <div class="nav-item"><span class="nav-dot"></span> Consultations</div>
+    <div class="nav-item"><span class="nav-dot"></span> Notifications</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Book an Appointment</div>
+        <div class="page-sub">Real-time slot availability across participating facilities</div>
+      </div>
+      <div class="topbar-right">
+        <div class="status-pill"><span class="status-dot"></span> Synced &middot; Online</div>
+        <div class="avatar">AI</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-label">Appointment Details</div>
+          <div class="form-grid">
+            <div class="field" style="flex:1;"><label>Facility</label><select><option>ATBUTH General Hospital &mdash; Bauchi</option></select></div>
+            <div class="field" style="flex:1;"><label>Department</label><select><option>General Medicine</option></select></div>
+          </div>
+          <div class="field"><label>Doctor</label><select><option>Dr. Bello Suleiman &mdash; Available Thursdays</option></select></div>
+
+          <div class="field">
+            <label>Available Time Slots &mdash; Thursday, 10 September</label>
+            <div class="slots">
+              <div class="slot">9:00 AM</div>
+              <div class="slot taken">9:30 AM</div>
+              <div class="slot sel">10:30 AM</div>
+              <div class="slot">11:00 AM</div>
+              <div class="slot taken">11:30 AM</div>
+              <div class="slot">1:00 PM</div>
+              <div class="slot">2:30 PM</div>
+            </div>
+          </div>
+
+          <div class="conflict-banner">&#9888; A conflicting request was received for the 9:30 slot 4 seconds ago and has been automatically locked.</div>
+
+          <div class="field"><label>Reason for Visit</label><input value="Follow-up on antenatal checkup"/></div>
+          <button class="btn">Confirm Booking</button>
+        </div>
+      </div>
+      <div class="col col-narrow">
+        <div class="card">
+          <div class="card-label">Booking Summary</div>
+          <div class="summary-row"><span>Patient</span><b>Amina Ibrahim</b></div>
+          <div class="summary-row"><span>Facility</span><b>ATBUTH Bauchi</b></div>
+          <div class="summary-row"><span>Doctor</span><b>Dr. Bello Suleiman</b></div>
+          <div class="summary-row"><span>Date</span><b>Thu, 10 Sept</b></div>
+          <div class="summary-row"><span>Time</span><b>10:30 AM</b></div>
+          <div class="summary-row"><span>Mode</span><b>Video Consultation</b></div>
+          <div class="divider"></div>
+          <div style="font-size:11.5px; color:#5C7A76;">An SMS and email reminder will be sent 24 hours before this appointment via Termii and Nodemailer.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body></html>
