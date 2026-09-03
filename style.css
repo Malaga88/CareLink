@@ -80,3 +80,10 @@ th { text-align: left; color: #8AA6A2; font-size: 10.5px; text-transform: upperc
 td { padding: 11px 10px; border-bottom: 1px solid #EEF3F2; color: #253F3B; }
 
 .divider { height: 1px; background: #E3ECEA; margin: 16px 0; }
+
+/* Links reuse the same look as the elements they replace — no default blue/underline */
+a { text-decoration: none; color: inherit; }
+a.nav-item, a.role-chip, a.btn, a.btn-ghost, a.brand { cursor: pointer; }
+a.nav-item:hover { background: #0E5E59; color: #fff; }
+a.role-chip:hover { border-color: #0E5E59; }
+a.q-item:hover, a.record-row:hover { background: #F5F9F8; }
