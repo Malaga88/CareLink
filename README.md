@@ -1,69 +1,45 @@
-# CareLink Bauchi — Static Website (Plain HTML/CSS)
+# CareLink Bauchi — Telemedicine Platform Prototype (plain HTML/CSS/JS)
 
-A working, framework-free static site for the CareLink Bauchi
-telemedicine platform interface. No build step, no dependencies —
-open `index.html` (or any page) directly in a browser, or drop the
-whole folder onto any static host.
+A framework-free, no-build front-end prototype of the CareLink Bauchi telemedicine and records platform.
+Open `index.html` in a browser, or drop the folder on any static host (GitHub Pages, Netlify, Vercel).
+
+> **Demo data notice.** Every patient, doctor, facility figure, email address and statistic in this prototype is **fictional placeholder data**. Email addresses use the reserved `carelink.example` domain. Dashboard KPIs are simulated; replace them with measured results before reporting them anywhere.
 
 ## Pages
 
-- `index.html` — redirects straight to the login screen
-- `login.html` — login & role selection (Patient / Doctor / Nurse-Admin / Health Officer)
-- `patient_dashboard.html` — patient dashboard: next appointment, recent records, reminders
-- `book_appointment.html` — real-time appointment booking with a live conflict-detection example
-- `doctor_console.html` — doctor's patient queue, EHR view, diagnosis/prescription form, referral action
-- `admin_dashboard.html` — health officer's state-level reporting dashboard (LGA usage, referrals, live metrics)
-- `style.css` — shared design system used by every page (colours, sidebar, cards, buttons, tags, tables)
+| File | Purpose |
+|---|---|
+| `index.html` | Redirects to the login screen |
+| `login.html` | Role selection + validated sign-in form (Patient, Doctor, Nurse/Admin, Health Officer) |
+| `patient_dashboard.html` | Next appointment (from your latest booking), records preview, reminders, cancel appointment |
+| `book_appointment.html` | Facility → department → doctor → date → time slot, with live conflict checking |
+| `records.html` | Medical records with type filters, search and expandable details |
+| `doctor_console.html` | 6-patient queue, diagnosis/prescription form (saved per patient), referral dialog |
+| `admin_dashboard.html` | State report KPIs, weekly chart, LGA usage, referrals table with Accept action |
+| `style.css` | Shared design system (tokens in `:root`) |
+| `app.js` | Shared demo logic: session, role guard, sidebar, toasts, booking/conflict helpers |
 
-## Navigation
+## What now works (vs. the first static version)
 
-The pages are properly linked to each other, not standalone mockups:
+- **Sign-in:** real form with email/password validation, show/hide password, role-based redirect, sign-out.
+- **Role guard:** pages redirect to login (or to the user's own home) if opened without the right role.
+- **Booking:** slots are clickable buttons; the summary updates live; doctors only offer their working days; dates are computed from today (no stale dates).
+- **Conflict detection:** a slot booked in this browser, or "taken" in the simulated server, is disabled. "Simulate a clashing request" locks your chosen slot; Confirm re-checks the slot before saving.
+- **Cross-page flow:** a confirmed booking shows on the patient dashboard; a doctor's referral appears in the admin referrals table.
+- **Doctor console:** queue selection, per-patient notes, validation, "Seen" markers.
+- **Responsive and accessible:** viewport meta, mobile slide-in sidebar, labelled form fields, keyboard focus styles, `lang="en"`, page titles, skip link, readable text sizes and higher-contrast muted text, reduced-motion support.
+- **Fonts:** Source Sans 3 / Source Serif 4 from Google Fonts, falling back to the original DejaVu Serif / Liberation Sans.
 
-- The **role chips** and **Sign in** button on the login page take you
-  to the matching dashboard.
-- Each dashboard's **sidebar** and **logo** link back to the other
-  built pages (Dashboard ↔ Appointments, and the CareLink logo
-  returns to the login screen).
-- **Book New Appointment** (patient dashboard) → booking page;
-  **Confirm Booking** → back to the patient dashboard.
-- **Refer to Another Facility** (doctor console) → admin dashboard,
-  standing in for the receiving facility's view.
+## Important limits
 
-A few links (Medical Records, Consultations, Notifications, Patient
-Records, Referrals, Users & Facilities) are left as plain sidebar
-labels rather than dead links, since those screens haven't been built
-yet — add a page and turn them into `<a href="...">` links the same
-way the others are wired up.
+- State lives in the browser (`localStorage` / `sessionStorage`). There is **no real authentication or security**; the role guard only shapes the demo. Real access control, password hashing and audit logging must be enforced by the backend.
+- Sidebar items marked "Soon" (Consultations, Notifications, Patient Records, Referrals, Facility Overview, Users & Facilities, Notifications Log) are not built yet.
+- Clearing site data resets all demo bookings, notes and referrals.
 
 ## Design tokens
 
-- Primary teal: `#0E5E59` / dark teal: `#08403C`
-- Accent (CTAs): `#D9822B`
-- Background: `#F5F8F7`, Card surface: `#FFFFFF`
-- Text: `#17302D` (body), `#5C7A76` (muted)
-- Status tags: green `#2F855A` (success), amber `#B3541E` (pending/offline),
-  blue `#2B5C8A` (informational)
-- Headings: 'DejaVu Serif' — Body/UI: 'Liberation Sans'
-  (swap for whichever web fonts you prefer — just update the
-  `font-family` values in `style.css`)
+Primary teal `#0E5E59` / dark `#08403C` · Accent `#D9822B` · Background `#F5F8F7` · Text `#17302D` · Muted `#5A7773` (darkened for contrast) · Status green `#2F855A`, amber `#B3541E`, blue `#2B5C8A`.
 
-## Deploying it
+## Wiring to the real backend
 
-Since it's plain static HTML/CSS, you can host it anywhere with zero
-configuration:
-
-- **GitHub Pages** — push this folder to a repo and enable Pages on
-  the branch/folder.
-- **Netlify / Vercel** — drag-and-drop the folder onto their web
-  dashboard for an instant live URL.
-- **Anywhere else** — any static file host (Render, Railway static
-  sites, a plain Apache/Nginx server) will serve it as-is.
-
-## Wiring it to a real backend later
-
-All data on screen (patient names, appointment times, LGA stats) is
-placeholder content. When the Node/Express + PostgreSQL backend from
-Chapter Three is ready, replace the static values in each page with
-JavaScript `fetch()` calls to your API endpoints (auth, scheduling,
-EHR, admin reporting) — no framework required for that either, plain
-`fetch` and DOM updates will do it.
+`app.js` is the seam. Replace the `CL.store` reads/writes and helpers (`slotTaken`, bookings, referrals, `CL.DOCTORS`) with `fetch()` calls to the Node/Express + PostgreSQL API (auth, scheduling, EHR, reporting). Do conflict detection in the database with a unique constraint on (doctor, date, slot) so two simultaneous requests cannot both succeed. Because the platform will hold patient health data, plan for Nigeria Data Protection Act (NDPA 2023) compliance: consent, role-based access, encryption in transit and at rest, and audit trails.

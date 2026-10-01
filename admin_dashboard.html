@@ -1,84 +1,70 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><style>
-.kpis{display:flex; gap:16px; margin-bottom:18px;}
-.kpi{flex:1;}
-.bar-wrap{display:flex; align-items:flex-end; gap:14px; height:140px; margin-top:10px; padding-top:10px;}
-.bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
-.bar{width:100%; background:linear-gradient(180deg,#1B7A73,#0E5E59); border-radius:6px 6px 0 0;}
-.bar-label{font-size:10.5px; color:#8AA6A2; margin-top:6px;}
-.lga-row{display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #EEF3F2; font-size:12.5px;}
-.lga-row:last-child{border-bottom:none;}
-.lga-name{font-weight:bold; color:#17302D;}
-.lga-bar-bg{width:140px; height:6px; background:#EAF2F0; border-radius:4px; overflow:hidden;}
-.lga-bar-fg{height:100%; background:#0E5E59;}
-</style></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#08403C"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E5E59%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27Georgia%27%3EC%3C/text%3E%3C/svg%3E"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>State reports &middot; CareLink Bauchi</title></head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="shell">
-  <div class="sidebar">
-    <a class="brand" href="login.html">
-      <div class="brand-mark">C</div>
-      <div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div>
-    </a>
-    <div class="nav-item"><span class="nav-dot"></span> Facility Overview</div>
-    <a class="nav-item active" href="admin_dashboard.html"><span class="nav-dot"></span> State Reports</a>
-    <div class="nav-item"><span class="nav-dot"></span> Users &amp; Facilities</div>
-    <div class="nav-item"><span class="nav-dot"></span> Notifications Log</div>
-  </div>
-  <div class="main">
-    <div class="topbar">
-      <div>
-        <div class="page-title">State-Level Reporting</div>
-        <div class="page-sub">Bauchi State Ministry of Health &middot; All Facilities</div>
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="backdrop" id="backdrop"></div>
+  <main class="main" id="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+        <div><h1 class="page-title">State-level reporting</h1><div class="page-sub" id="sub">Bauchi State Ministry of Health &middot; All facilities</div></div>
       </div>
-      <div class="topbar-right">
-        <div class="status-pill"><span class="status-dot"></span> 99.1% Uptime (30d)</div>
-        <div class="avatar">HO</div>
-      </div>
-    </div>
+      <div class="topbar-right"><div class="status-pill" id="netPill"><span class="status-dot"></span><span>Synced &middot; Online</span></div><div class="avatar" data-user-initials></div></div>
+    </header>
 
-    <div class="kpis">
-      <div class="card kpi"><div class="card-label">Appointments (30d)</div><div class="stat-num">4,382</div><div class="stat-note">Across 20 LGAs</div></div>
-      <div class="card kpi"><div class="card-label">Scheduling Conflict Rate</div><div class="stat-num">3.1%</div><div class="stat-note">Target: below 5%</div></div>
-      <div class="card kpi"><div class="card-label">Avg. API Response Time</div><div class="stat-num">241ms</div><div class="stat-note">Target: under 300ms</div></div>
-      <div class="card kpi"><div class="card-label">SUS Usability Score</div><div class="stat-num">76.4</div><div class="stat-note">Target: above 70</div></div>
-    </div>
+    <div class="banner" style="background:#E4EEF6;border-color:#B9D2E6;color:#244F78">Sample data. Figures below are simulated for the prototype; targets come from the project's evaluation plan. Replace them with measured results before reporting.</div>
+
+    <div class="kpis" id="kpis"></div>
 
     <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-label">Weekly Appointment Volume</div>
-          <div class="bar-wrap">
-            <div class="bar-col"><div class="bar" style="height:52%;"></div><div class="bar-label">Mon</div></div>
-            <div class="bar-col"><div class="bar" style="height:68%;"></div><div class="bar-label">Tue</div></div>
-            <div class="bar-col"><div class="bar" style="height:74%;"></div><div class="bar-label">Wed</div></div>
-            <div class="bar-col"><div class="bar" style="height:91%;"></div><div class="bar-label">Thu</div></div>
-            <div class="bar-col"><div class="bar" style="height:80%;"></div><div class="bar-label">Fri</div></div>
-            <div class="bar-col"><div class="bar" style="height:34%;"></div><div class="bar-label">Sat</div></div>
-            <div class="bar-col"><div class="bar" style="height:19%;"></div><div class="bar-label">Sun</div></div>
-          </div>
-        </div>
-      </div>
-      <div class="col col-narrow">
-        <div class="card">
-          <div class="card-label">Facility Usage by LGA</div>
-          <div class="lga-row"><span class="lga-name">Bauchi</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:88%;"></div></div></div>
-          <div class="lga-row"><span class="lga-name">Ningi</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:54%;"></div></div></div>
-          <div class="lga-row"><span class="lga-name">Ganjuwa</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:41%;"></div></div></div>
-          <div class="lga-row"><span class="lga-name">Kafin Zaki</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:23%;"></div></div></div>
-          <div class="lga-row"><span class="lga-name">Misau</span><div class="lga-bar-bg"><div class="lga-bar-fg" style="width:37%;"></div></div></div>
-        </div>
-      </div>
+      <div class="col"><div class="card"><h2 class="card-label">Weekly appointment volume (sample)</h2><div class="bar-wrap" id="bars" role="img" aria-label="Bar chart of appointments per weekday, peaking on Thursday"></div></div></div>
+      <div class="col col-narrow"><div class="card"><h2 class="card-label">Facility usage by LGA (sample)</h2><div id="lgas"></div></div></div>
     </div>
 
     <div class="card">
-      <div class="card-label">Recent Referrals Across Facilities</div>
-      <table>
-        <tr><th>Patient</th><th>From</th><th>To</th><th>Reason</th><th>Status</th></tr>
-        <tr><td>Halima Sani</td><td>Ningi PHC</td><td>ATBUTH Bauchi</td><td>Specialist review</td><td><span class="tag tag-amber">Pending</span></td></tr>
-        <tr><td>Emeka Obi</td><td>Ganjuwa PHC</td><td>ATBUTH Bauchi</td><td>Lab escalation</td><td><span class="tag tag-green">Accepted</span></td></tr>
-        <tr><td>Yakubu Danladi</td><td>Kafin Zaki PHC</td><td>Misau General</td><td>Emergency transfer</td><td><span class="tag tag-blue">In Transit</span></td></tr>
-      </table>
+      <h2 class="card-label">Recent referrals across facilities</h2>
+      <div class="table-wrap"><table><thead><tr><th>Patient</th><th>From</th><th>To</th><th>Reason</th><th>Status</th><th><span class="sr-only">Action</span></th></tr></thead><tbody id="refs"></tbody></table></div>
     </div>
-  </div>
+  </main>
 </div>
+<script src="app.js"></script>
+<script>
+(function(){
+  var u = CL.guard(['nurse','officer']); if (!u) return;
+  CL.shell('admin_dashboard.html');
+  var $ = function(id){ return document.getElementById(id); };
+  $('sub').textContent = CL.USERS[u.role].sub + ' \u00b7 All facilities';
+
+  var KPI = [['Appointments (30d)', '4,382', 'Across 20 LGAs'], ['Scheduling conflict rate', '3.1%', 'Target: below 5%'], ['Avg. API response time', '241 ms', 'Target: under 300 ms'], ['SUS usability score', '76.4', 'Target: above 70']];
+  $('kpis').innerHTML = KPI.map(function(k){ return '<div class="card"><h2 class="card-label">' + k[0] + '</h2><div class="stat-num">' + k[1] + '</div><div class="stat-note">' + k[2] + '</div></div>'; }).join('');
+
+  var WEEK = [['Mon', 52], ['Tue', 68], ['Wed', 74], ['Thu', 91], ['Fri', 80], ['Sat', 34], ['Sun', 19]];
+  $('bars').innerHTML = WEEK.map(function(w){ return '<div class="bar-col"><div class="bar-val">' + w[1] + '</div><div class="bar" style="height:' + w[1] + '%"></div><div class="bar-label">' + w[0] + '</div></div>'; }).join('');
+
+  var LGA = [['Bauchi', 88], ['Ningi', 54], ['Ganjuwa', 41], ['Misau', 37], ['Kafin Zaki', 23]];
+  $('lgas').innerHTML = LGA.map(function(l){ return '<div class="lga-row"><span class="lga-name">' + l[0] + '</span><div class="lga-bar-bg" role="img" aria-label="' + l[0] + ' ' + l[1] + ' percent"><div class="lga-bar-fg" style="width:' + l[1] + '%"></div></div></div>'; }).join('');
+
+  var SEED = [
+    { patient: 'Halima Sani', from: 'Ningi PHC', to: 'ATBUTH Bauchi', reason: 'Specialist review', status: 'Pending' },
+    { patient: 'Emeka Obi', from: 'Ganjuwa PHC', to: 'ATBUTH Bauchi', reason: 'Lab escalation', status: 'Accepted' },
+    { patient: 'Yakubu Danladi', from: 'Kafin Zaki PHC', to: 'Misau General', reason: 'Emergency transfer', status: 'In transit' }
+  ];
+  var added = CL.store.get('referrals', []), updates = CL.store.get('refStatus', {});
+  var all = added.slice().reverse().concat(SEED);
+  var cls = { 'Pending': 'tag-amber', 'Accepted': 'tag-green', 'In transit': 'tag-blue' };
+  function drawRefs(){
+    $('refs').innerHTML = all.map(function(r, i){
+      var st = updates[r.patient + '|' + r.reason] || r.status;
+      return '<tr><td>' + CL.esc(r.patient) + '</td><td>' + CL.esc(r.from) + '</td><td>' + CL.esc(r.to) + '</td><td>' + CL.esc(r.reason) + '</td><td><span class="tag ' + cls[st] + '">' + st + '</span></td><td>' + (st === 'Pending' ? '<button type="button" class="btn-ghost btn-sm" data-i="' + i + '">Accept</button>' : '') + '</td></tr>';
+    }).join('');
+  }
+  $('refs').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-i]'); if (!b) return;
+    var r = all[+b.dataset.i]; updates[r.patient + '|' + r.reason] = 'Accepted'; CL.store.set('refStatus', updates); CL.toast('Referral for ' + r.patient + ' accepted.'); drawRefs();
+  });
+  drawRefs();
+})();
+</script>
 </body></html>

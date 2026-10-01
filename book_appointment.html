@@ -1,91 +1,127 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><link rel="stylesheet" href="style.css"><style>
-.form-grid{display:flex; gap:18px;}
-.field{margin-bottom:16px;}
-.field label{display:block; font-size:11.5px; color:#3E5854; margin-bottom:6px; font-weight:bold;}
-.field select, .field input{
-  width:100%; padding:10px 12px; border:1px solid #CFE0DC; border-radius:8px; font-size:13px; color:#17302D; background:#fff;
-}
-.slots{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
-.slot{padding:9px 14px; border:1px solid #CFE0DC; border-radius:8px; font-size:12px; color:#3E5854; background:#fff;}
-.slot.taken{color:#B9C7C4; background:#F1F5F4; text-decoration:line-through;}
-.slot.sel{background:#0E5E59; color:#fff; border-color:#0E5E59; font-weight:bold;}
-.summary-row{display:flex; justify-content:space-between; font-size:12.5px; padding:9px 0; border-bottom:1px solid #EEF3F2;}
-.summary-row:last-child{border-bottom:none;}
-.summary-row b{color:#0B2E2A;}
-.conflict-banner{
-  background:#FCEFE0; border:1px solid #F1C68C; color:#8A4A15; border-radius:10px;
-  padding:11px 14px; font-size:12px; margin-bottom:16px; display:flex; gap:8px; align-items:center;
-}
-</style></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#08403C"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230E5E59%27/%3E%3Ctext x=%2716%27 y=%2723%27 font-size=%2720%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27Georgia%27%3EC%3C/text%3E%3C/svg%3E"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:wght@600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Book an appointment &middot; CareLink Bauchi</title></head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
 <div class="shell">
-  <div class="sidebar">
-    <a class="brand" href="login.html">
-      <div class="brand-mark">C</div>
-      <div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div>
-    </a>
-    <a class="nav-item" href="patient_dashboard.html"><span class="nav-dot"></span> Dashboard</a>
-    <a class="nav-item active" href="book_appointment.html"><span class="nav-dot"></span> Appointments</a>
-    <div class="nav-item"><span class="nav-dot"></span> Medical Records</div>
-    <div class="nav-item"><span class="nav-dot"></span> Consultations</div>
-    <div class="nav-item"><span class="nav-dot"></span> Notifications</div>
-  </div>
-  <div class="main">
-    <div class="topbar">
-      <div>
-        <div class="page-title">Book an Appointment</div>
-        <div class="page-sub">Real-time slot availability across participating facilities</div>
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="backdrop" id="backdrop"></div>
+  <main class="main" id="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+        <div><h1 class="page-title">Book an appointment</h1><div class="page-sub">Live slot availability with conflict checking</div></div>
       </div>
-      <div class="topbar-right">
-        <div class="status-pill"><span class="status-dot"></span> Synced &middot; Online</div>
-        <div class="avatar">AI</div>
-      </div>
-    </div>
+      <div class="topbar-right"><div class="status-pill" id="netPill"><span class="status-dot"></span><span>Synced &middot; Online</span></div><div class="avatar" data-user-initials></div></div>
+    </header>
 
     <div class="row">
       <div class="col">
         <div class="card">
-          <div class="card-label">Appointment Details</div>
+          <h2 class="card-label">Appointment details</h2>
           <div class="form-grid">
-            <div class="field" style="flex:1;"><label>Facility</label><select><option>ATBUTH General Hospital &mdash; Bauchi</option></select></div>
-            <div class="field" style="flex:1;"><label>Department</label><select><option>General Medicine</option></select></div>
+            <div class="field"><label for="facility">Facility</label><select id="facility"></select></div>
+            <div class="field"><label for="dept">Department</label><select id="dept"></select></div>
           </div>
-          <div class="field"><label>Doctor</label><select><option>Dr. Bello Suleiman &mdash; Available Thursdays</option></select></div>
-
+          <div class="form-grid">
+            <div class="field"><label for="doctor">Doctor</label><select id="doctor"></select></div>
+            <div class="field"><label for="date">Date</label><select id="date"></select></div>
+          </div>
           <div class="field">
-            <label>Available Time Slots &mdash; Thursday, 10 September</label>
-            <div class="slots">
-              <div class="slot">9:00 AM</div>
-              <div class="slot taken">9:30 AM</div>
-              <div class="slot sel">10:30 AM</div>
-              <div class="slot">11:00 AM</div>
-              <div class="slot taken">11:30 AM</div>
-              <div class="slot">1:00 PM</div>
-              <div class="slot">2:30 PM</div>
-            </div>
+            <span class="lbl" id="slotsLbl">Available time slots</span>
+            <div class="slots" id="slots" role="group" aria-labelledby="slotsLbl"></div>
           </div>
-
-          <div class="conflict-banner">&#9888; A conflicting request was received for the 9:30 slot 4 seconds ago and has been automatically locked.</div>
-
-          <div class="field"><label>Reason for Visit</label><input value="Follow-up on antenatal checkup"/></div>
-          <a class="btn" href="patient_dashboard.html">Confirm Booking</a>
+          <div class="banner" id="conflict" role="alert" hidden></div>
+          <div class="field"><label for="reason">Reason for visit</label><input id="reason" value="Follow-up on antenatal checkup" maxlength="120"></div>
+          <div class="actions" style="margin:0">
+            <button class="btn" type="button" id="confirm" disabled>Confirm booking</button>
+            <button class="btn-ghost" type="button" id="simulate" title="Demo: pretend another patient just booked your selected slot">Simulate a clashing request</button>
+          </div>
         </div>
       </div>
       <div class="col col-narrow">
         <div class="card">
-          <div class="card-label">Booking Summary</div>
+          <h2 class="card-label">Booking summary</h2>
           <div class="summary-row"><span>Patient</span><b>Amina Ibrahim</b></div>
-          <div class="summary-row"><span>Facility</span><b>ATBUTH Bauchi</b></div>
-          <div class="summary-row"><span>Doctor</span><b>Dr. Bello Suleiman</b></div>
-          <div class="summary-row"><span>Date</span><b>Thu, 10 Sept</b></div>
-          <div class="summary-row"><span>Time</span><b>10:30 AM</b></div>
-          <div class="summary-row"><span>Mode</span><b>Video Consultation</b></div>
+          <div class="summary-row"><span>Facility</span><b id="sFacility">&ndash;</b></div>
+          <div class="summary-row"><span>Doctor</span><b id="sDoctor">&ndash;</b></div>
+          <div class="summary-row"><span>Date</span><b id="sDate">&ndash;</b></div>
+          <div class="summary-row"><span>Time</span><b id="sTime">Select a time</b></div>
+          <div class="summary-row"><span>Mode</span><b>Video consultation</b></div>
           <div class="divider"></div>
-          <div style="font-size:11.5px; color:#5C7A76;">An SMS and email reminder will be sent 24 hours before this appointment via Termii and Nodemailer.</div>
+          <p class="note">An SMS and email reminder is planned 24 hours before the appointment (Termii and Nodemailer in the real system).</p>
         </div>
       </div>
     </div>
-  </div>
+  </main>
 </div>
+<script src="app.js"></script>
+<script>
+(function(){
+  if (!CL.guard(['patient'])) return;
+  CL.shell('book_appointment.html');
+  var $ = function(id){ return document.getElementById(id); };
+  var fac = $('facility'), dept = $('dept'), doc = $('doctor'), date = $('date'), slotsBox = $('slots'), conflict = $('conflict'), confirmBtn = $('confirm');
+  var selected = null;
+
+  function opts(sel, items){ sel.innerHTML = items.map(function(i){ return '<option value="' + CL.esc(i[0]) + '">' + CL.esc(i[1]) + '</option>'; }).join(''); }
+  function currentDoc(){ return CL.DOCTORS.filter(function(d){ return d.id === doc.value; })[0]; }
+
+  function fillFacilities(){ opts(fac, CL.FACILITIES.map(function(f, i){ return [i, f]; })); fillDepts(); }
+  function fillDepts(){
+    var ds = []; CL.DOCTORS.forEach(function(d){ if (d.facility === +fac.value && ds.indexOf(d.dept) < 0) ds.push(d.dept); });
+    opts(dept, ds.map(function(d){ return [d, d]; })); fillDoctors();
+  }
+  function fillDoctors(){
+    var list = CL.DOCTORS.filter(function(d){ return d.facility === +fac.value && d.dept === dept.value; });
+    opts(doc, list.map(function(d){ return [d.id, d.name]; })); fillDates();
+  }
+  function fillDates(){
+    var d = currentDoc(); if (!d) return;
+    opts(date, CL.upcomingDates(d, 4).map(function(s){ return [s, CL.long(s)]; })); drawSlots();
+  }
+  function drawSlots(){
+    selected = null; conflict.hidden = true;
+    var d = currentDoc(), s = date.value; if (!d || !s) return;
+    $('slotsLbl').textContent = 'Available time slots \u2014 ' + CL.long(s);
+    slotsBox.innerHTML = '';
+    CL.SLOTS.forEach(function(t){
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'slot'; b.textContent = t;
+      var taken = CL.slotTaken(d.id, s, t); b.disabled = taken; b.setAttribute('aria-pressed', 'false');
+      if (taken) b.setAttribute('aria-label', t + ', unavailable');
+      b.onclick = function(){ selected = t; slotsBox.querySelectorAll('.slot').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); conflict.hidden = true; summary(); };
+      slotsBox.appendChild(b);
+    });
+    summary();
+  }
+  function summary(){
+    var d = currentDoc();
+    $('sFacility').textContent = CL.FACILITIES[+fac.value].split(' \u2014 ')[0];
+    $('sDoctor').textContent = d ? d.name : '\u2013';
+    $('sDate').textContent = date.value ? CL.short(date.value) : '\u2013';
+    $('sTime').textContent = selected || 'Select a time';
+    confirmBtn.disabled = !selected;
+  }
+
+  fac.onchange = fillDepts; dept.onchange = fillDoctors; doc.onchange = fillDates; date.onchange = drawSlots;
+
+  $('simulate').onclick = function(){
+    if (!selected) { CL.toast('Select a time first, then simulate a clash.', true); return; }
+    var d = currentDoc(), key = [d.id, date.value, selected].join('|'), b = CL.store.get('blocked', []); b.push(key); CL.store.set('blocked', b);
+    var lost = selected; drawSlots();
+    conflict.textContent = 'Another request for ' + lost + ' arrived first, so that slot is now locked. Please choose another time.'; conflict.hidden = false;
+  };
+
+  confirmBtn.onclick = function(){
+    var d = currentDoc(), s = date.value;
+    // Conflict check at the moment of booking (server-side in the real system)
+    if (CL.slotTaken(d.id, s, selected)) { var lost = selected; drawSlots(); conflict.textContent = lost + ' was just taken. Please choose another time.'; conflict.hidden = false; return; }
+    var list = CL.store.get('bookings', []);
+    list.push({ id: Date.now(), docId: d.id, doctor: d.name, dept: d.dept, facility: CL.FACILITIES[d.facility], date: s, slot: selected, reason: $('reason').value.trim() });
+    CL.store.set('bookings', list);
+    CL.toast('Booked for ' + CL.short(s) + ' at ' + selected + '.');
+    setTimeout(function(){ location.href = 'patient_dashboard.html'; }, 900);
+  };
+  fillFacilities();
+})();
+</script>
 </body></html>
