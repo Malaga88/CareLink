@@ -1,0 +1,28 @@
+{
+  "name": "carelink-backend",
+  "version": "1.0.0",
+  "description": "CareLink Bauchi telemedicine platform API (Express 5 + MongoDB/Mongoose)",
+  "main": "server.mjs",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "nodemon server.mjs",
+    "seed": "node scripts/seed.mjs",
+    "test": "node --test test/api.test.mjs"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

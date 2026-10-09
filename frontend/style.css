@@ -206,3 +206,10 @@ details.rec summary::-webkit-details-marker{display:none}
   .page-title{font-size:21px}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Added with the backend */
+.linklike{background:none;border:none;color:var(--teal);font-weight:700;font-size:inherit;text-decoration:underline;padding:0}
+.demo-accounts{margin-top:14px;font-size:13px;color:var(--muted)}
+.demo-accounts summary{cursor:pointer;font-weight:600;color:var(--teal)}
+.demo-accounts ul{margin:6px 0 0 18px}
+.demo-accounts code{background:#EAF4F2;padding:1px 5px;border-radius:4px}
