@@ -9,6 +9,7 @@ import Facility from '../models/Facility.mjs';
 import { authenticate, requireRole } from '../middleware/auth.mjs';
 import { SLOTS } from '../lib/constants.mjs';
 import { HttpError, isISODate, isNonEmptyString, todayISO } from '../lib/utils.mjs';
+import { joinState, joinUrl } from '../lib/video.mjs';
 import { recordView } from './records.mjs';
 
 const router = Router();
@@ -44,7 +45,7 @@ router.get('/queue', async (req, res) => {
         queue: appts.map((a) => {
             const c = byAppt.get(String(a._id));
             return {
-                appointmentId: a._id, slot: a.slot, reason: a.reason, status: a.status,
+                appointmentId: a._id, slot: a.slot, reason: a.reason, status: a.status, ...joinState(a),
                 patient: { id: a.patient._id, name: a.patient.name, patientId: a.patient.patientId, age: a.patient.age, sex: a.patient.sex, lga: a.patient.lga },
                 consultation: c ? { diagnosis: c.diagnosis, prescription: c.prescription, savedAt: c.updatedAt } : null,
             };
@@ -53,6 +54,11 @@ router.get('/queue', async (req, res) => {
 });
 
 // A doctor may read a patient's history only if that patient has an active appointment with them.
+router.get('/appointments/:id/join', async (req, res) => {
+    const appt = await ownAppointment(req, req.params.id);
+    res.json({ url: await joinUrl(appt) });
+});
+
 router.get('/patients/:id/history', async (req, res) => {
     if (!mongoose.isValidObjectId(req.params.id)) throw new HttpError(400, 'Invalid patient');
     // Cancelled appointments do not grant access.
@@ -83,10 +89,23 @@ router.put('/consultations', async (req, res) => {
         { $set: {
             patient: appt.patient._id, type: 'Visit', title: `Consultation: ${diagnosis.trim().slice(0, 100)}`,
             facilityName: req.doctor.facility.name, date: appt.date, statusLabel: 'Recorded', statusTone: 'blue',
-            note: `${diagnosis.trim()}${prescription?.trim() ? `\nPrescription: ${prescription.trim()}` : ''}`,
+            note: diagnosis.trim(),
         } },
         { upsert: true, setDefaultsOnInsert: true },
     );
+    // A separate Prescription record, so patients can filter for it; removed again if the prescription is cleared.
+    if (prescription?.trim()) {
+        await Record.findOneAndUpdate(
+            { rxConsultation: consult._id },
+            { $set: {
+                patient: appt.patient._id, type: 'Prescription', title: `Prescription: ${prescription.trim().split('\n')[0].slice(0, 100)}`,
+                facilityName: req.doctor.facility.name, date: appt.date, statusLabel: 'Active', statusTone: 'blue', note: prescription.trim(),
+            } },
+            { upsert: true, setDefaultsOnInsert: true },
+        );
+    } else {
+        await Record.deleteOne({ rxConsultation: consult._id });
+    }
 
     res.json({ message: 'Consultation saved', consultation: { diagnosis: consult.diagnosis, prescription: consult.prescription, savedAt: consult.updatedAt } });
 });

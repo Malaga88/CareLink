@@ -24,11 +24,13 @@
     officer: { label: 'Health Officer', home: 'admin_dashboard.html' }
   };
   var NAV = {
-    patient: [['patient_dashboard.html', 'Dashboard'], ['book_appointment.html', 'Appointments'], ['records.html', 'Medical Records'], [null, 'Consultations'], [null, 'Notifications']],
-    doctor: [['doctor_console.html', 'My Queue'], [null, 'Patient Records'], [null, 'Referrals'], [null, 'Consultations']],
-    nurse: [[null, 'Facility Overview'], ['admin_dashboard.html', 'State Reports'], [null, 'Users & Facilities'], [null, 'Notifications Log']],
-    officer: [[null, 'Facility Overview'], ['admin_dashboard.html', 'State Reports'], [null, 'Users & Facilities'], [null, 'Notifications Log']]
+    patient: [['patient_dashboard.html', 'Dashboard'], ['book_appointment.html', 'Book appointment'], ['records.html', 'Medical Records']],
+    doctor: [['doctor_console.html', 'My Queue']],
+    nurse: [['admin_dashboard.html', 'State Reports']],
+    officer: [['admin_dashboard.html', 'State Reports'], ['users.html', 'Users & Facilities']]
   };
+  CL.LGAS = ['Alkaleri', 'Bauchi', 'Bogoro', 'Damban', 'Darazo', 'Dass', 'Gamawa', 'Ganjuwa', 'Giade', 'Itas/Gadau', "Jama'are", 'Katagum', 'Kirfi', 'Misau', 'Ningi', 'Shira', 'Tafawa Balewa', 'Toro', 'Warji', 'Zaki'];
+
 
   /* ---------- API client ---------- */
   function ApiError(message, status, data) { this.message = message; this.status = status; this.data = data || {}; }
@@ -64,11 +66,6 @@
   CL.esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   CL.greeting = function () { var h = new Date().getHours(); return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening'; };
   CL.initials = function (name) { var w = String(name || '?').replace(/^(Dr\.|Nurse)\s+/, '').split(/\s+/); return ((w[0] || '')[0] + (w[1] ? w[1][0] : '')).toUpperCase(); };
-  CL.upcomingDates = function (days, count) {
-    var out = [], d = new Date(); d.setHours(0, 0, 0, 0);
-    for (var i = 1; out.length < count && i < 60; i++) { var t = new Date(d); t.setDate(d.getDate() + i); if (days.indexOf(t.getDay()) > -1) out.push(CL.iso(t)); }
-    return out;
-  };
   CL.busy = function (btn, on, label) { if (!btn) return; if (on) { btn.dataset.label = btn.textContent; btn.textContent = label || 'Please wait\u2026'; } else if (btn.dataset.label) btn.textContent = btn.dataset.label; btn.disabled = !!on; };
 
   CL.toast = function (msg, warn) {
@@ -76,6 +73,48 @@
     if (!box) { box = document.createElement('div'); box.id = 'toast'; box.setAttribute('role', 'status'); box.setAttribute('aria-live', 'polite'); document.body.appendChild(box); }
     var t = document.createElement('div'); t.className = 'toast' + (warn ? ' warn' : ''); t.textContent = msg; box.appendChild(t);
     setTimeout(function () { t.remove(); }, 4200);
+  };
+
+  // Opens the video room in a new tab. The tab is opened straight from the click so popup blockers allow it.
+  CL.joinCall = function (path, btn) {
+    var w = window.open('about:blank', '_blank');
+    CL.busy(btn, true, 'Opening\u2026');
+    CL.api(path).then(function (r) { if (w) { w.opener = null; w.location.href = r.url; } else location.href = r.url; })
+      .catch(function (e) { if (w) w.close(); CL.fail(e); })
+      .then(function () { CL.busy(btn, false); });
+  };
+  CL.lgaOptions = function (selected) { return '<option value="">Select\u2026</option>' + CL.LGAS.map(function (l) { return '<option' + (l === selected ? ' selected' : '') + '>' + CL.esc(l) + '</option>'; }).join(''); };
+  CL.time = function (iso) { return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); };
+
+  /* ---------- change password (forced after an admin creates or resets the account) ---------- */
+  CL.changePassword = function (forced) {
+    var dlg = document.getElementById('pwDlg');
+    if (!dlg) {
+      dlg = document.createElement('dialog'); dlg.id = 'pwDlg'; dlg.setAttribute('aria-labelledby', 'pwTitle');
+      dlg.innerHTML = '<form method="dialog" id="pwForm" novalidate><h2 id="pwTitle">Change your password</h2><p class="note" id="pwNote" style="margin-bottom:14px"></p>' +
+        '<div class="field"><label for="pwCur">Current password</label><input id="pwCur" type="password" autocomplete="current-password" required></div>' +
+        '<div class="field"><label for="pwNew">New password (10+ characters)</label><input id="pwNew" type="password" autocomplete="new-password" minlength="10" required></div>' +
+        '<p class="error" id="pwErr" role="alert"></p><div class="dlg-actions"><button class="btn-ghost" type="button" id="pwCancel">Cancel</button><button class="btn" type="submit" id="pwSubmit">Change password</button></div></form>';
+      document.body.appendChild(dlg);
+      dlg.querySelector('#pwCancel').addEventListener('click', function () { dlg.close(); });
+      dlg.addEventListener('cancel', function (e) { if (dlg.dataset.forced === '1') e.preventDefault(); });
+      dlg.querySelector('#pwForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var cur = dlg.querySelector('#pwCur').value, nw = dlg.querySelector('#pwNew').value, err = dlg.querySelector('#pwErr');
+        if (!cur) { err.textContent = 'Enter your current password.'; return; }
+        if (nw.length < 10) { err.textContent = 'New password must be at least 10 characters.'; return; }
+        err.textContent = ''; CL.busy(dlg.querySelector('#pwSubmit'), true, 'Saving\u2026');
+        CL.api('/auth/change-password', { method: 'POST', body: { currentPassword: cur, newPassword: nw } }).then(function (r) {
+          var a = CL.auth(); a.user = r.user; ss('set', 'cl:auth', a); dlg.dataset.forced = '0'; dlg.close(); CL.toast('Password changed.');
+        }).catch(function (x) { err.textContent = x.message; CL.busy(dlg.querySelector('#pwSubmit'), false); });
+      });
+    }
+    dlg.dataset.forced = forced ? '1' : '0';
+    dlg.querySelector('#pwCancel').hidden = !!forced;
+    dlg.querySelector('#pwNote').textContent = forced ? 'Your account uses a temporary password. Choose your own to continue.' : 'Enter your current password, then choose a new one.';
+    dlg.querySelector('#pwForm').reset(); dlg.querySelector('#pwErr').textContent = '';
+    CL.busy(dlg.querySelector('#pwSubmit'), false);
+    dlg.showModal(); dlg.querySelector('#pwCur').focus();
   };
 
   /* ---------- guard + shell ---------- */
@@ -92,14 +131,14 @@
     var html = '<a class="brand" href="' + CL.ROLES[u.role].home + '"><div class="brand-mark" aria-hidden="true">C</div><div><div class="brand-name">CareLink</div><div class="brand-sub">Bauchi State</div></div></a><nav aria-label="Main">';
     NAV[u.role].forEach(function (n) {
       if (n[0]) html += '<a class="nav-item' + (n[0] === activeFile ? ' active" aria-current="page' : '') + '" href="' + n[0] + '"><span class="nav-dot"></span>' + CL.esc(n[1]) + '</a>';
-      else html += '<button type="button" class="nav-item" data-soon="' + CL.esc(n[1]) + '"><span class="nav-dot"></span>' + CL.esc(n[1]) + '<span class="soon">Soon</span></button>';
     });
-    html += '</nav><div class="nav-spacer"></div><button type="button" class="nav-item" id="signout"><span class="nav-dot"></span>Sign out</button>';
+    html += '</nav><div class="nav-spacer"></div><button type="button" class="nav-item" id="chpw"><span class="nav-dot"></span>Change password</button><button type="button" class="nav-item" id="signout"><span class="nav-dot"></span>Sign out</button>';
     sb.innerHTML = html;
     sb.addEventListener('click', function (e) {
-      var s = e.target.closest('[data-soon]'); if (s) CL.toast(s.getAttribute('data-soon') + ' is not built yet.');
       if (e.target.closest('#signout')) CL.signOut();
+      if (e.target.closest('#chpw')) CL.changePassword(false);
     });
+    if (u.mustChangePassword) CL.changePassword(true);
     document.querySelectorAll('[data-user-initials]').forEach(function (el) { el.textContent = CL.initials(u.name); el.setAttribute('title', u.name); });
     var btn = document.getElementById('menuBtn'), bd = document.getElementById('backdrop');
     function set(open) { sb.classList.toggle('open', open); bd.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); }

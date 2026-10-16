@@ -29,6 +29,16 @@ export const addDays = (isoDate, n) => {
     return d.toISOString().slice(0, 10);
 };
 
+// The next `count` bookable dates for a doctor (clinic time, starting tomorrow, within the 60-day booking window).
+export const bookableDates = (days, count = 6) => {
+    const out = [], today = todayISO();
+    for (let i = 1; i <= 60 && out.length < count; i++) {
+        const d = addDays(today, i);
+        if (days.includes(weekdayOf(d))) out.push(d);
+    }
+    return out;
+};
+
 export const publicUser = (u) => ({
     id: u._id,
     name: u.name,
@@ -36,4 +46,12 @@ export const publicUser = (u) => ({
     role: u.role,
     patientId: u.patientId ?? null,
     lga: u.lga ?? null,
+    mustChangePassword: !!u.mustChangePassword,
 });
+
+// Random temporary password without look-alike characters (no 0/O, 1/l/I).
+import { randomInt } from 'node:crypto';
+const PW_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+export const tempPassword = (len = 14) => Array.from({ length: len }, () => PW_ALPHABET[randomInt(PW_ALPHABET.length)]).join('');
+
+export const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

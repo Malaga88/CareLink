@@ -18,7 +18,7 @@
   }
   function fillDates() {
     var d = currentDoc(); if (!d) { date.innerHTML = ''; slotsBox.innerHTML = '<p class="note">No doctors available for this choice.</p>'; selected = null; summary(); return; }
-    opts(date, CL.upcomingDates(d.days, 4).map(function (s) { return [s, CL.long(s)]; })); drawSlots();
+    opts(date, d.dates.map(function (s) { return [s, CL.long(s)]; })); drawSlots();   // dates come from the server (clinic time)
   }
   function drawSlots(keepBanner) {
     selected = null; if (!keepBanner) conflict.hidden = true;
@@ -58,8 +58,17 @@
       });
   });
 
+  function setup(msg, retry) {
+    var b = $('setup'); b.hidden = false; b.innerHTML = CL.esc(msg) + (retry ? ' <button type="button" class="linklike" id="retry">Try again</button>' : '');
+    [fac, dept, doc, date].forEach(function (s) { s.innerHTML = ''; s.disabled = true; });
+    slotsBox.innerHTML = ''; confirmBtn.disabled = true; $('reason').disabled = true;
+    if (retry) $('retry').addEventListener('click', function () { location.reload(); });
+  }
   Promise.all([CL.api('/facilities'), CL.api('/doctors')]).then(function (r) {
-    facilities = r[0].facilities; doctors = r[1].doctors;
+    doctors = r[1].doctors;
+    // Only offer facilities that have at least one doctor, so no dropdown is ever empty.
+    facilities = r[0].facilities.filter(function (f) { return doctors.some(function (d) { return d.facilityId === f.id; }); });
+    if (!doctors.length || !facilities.length) { setup('No doctors are available for booking yet. A Health Officer needs to add a facility and at least one doctor first. Please check back soon.'); summary(); return; }
     opts(fac, facilities.map(function (f) { return [f.id, f.name]; })); fillDepts();
-  }).catch(CL.fail);
+  }).catch(function (e) { setup('Could not load doctors and facilities. ' + (e.message || ''), true); });
 })();

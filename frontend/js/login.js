@@ -31,7 +31,7 @@
   });
 
   // Patient self-registration
-  var dlg = $('regDlg');
+  var dlg = $('regDlg'); $('rLga').innerHTML = CL.lgaOptions();
   $('openRegister').addEventListener('click', function () { $('rErr').textContent = ''; dlg.showModal(); $('rName').focus(); });
   $('rCancel').addEventListener('click', function () { dlg.close(); });
   $('regForm').addEventListener('submit', function (e) {
@@ -39,9 +39,10 @@
     var name = $('rName').value.trim(), email = $('rEmail').value.trim(), pw = $('rPw').value, rErr = $('rErr');
     if (!name) { rErr.textContent = 'Enter your full name.'; return; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { rErr.textContent = 'Enter a valid email address.'; return; }
-    if (pw.length < 8) { rErr.textContent = 'Password must be at least 8 characters.'; return; }
+    if (pw.length < 10) { rErr.textContent = 'Password must be at least 10 characters.'; return; }
+    if (!$('rLga').value) { rErr.textContent = 'Choose your local government area.'; return; }
     rErr.textContent = ''; CL.busy($('rSubmit'), true, 'Creating\u2026');
-    CL.api('/auth/register', { method: 'POST', body: { name: name, email: email, password: pw, lga: $('rLga').value.trim() } })
+    CL.api('/auth/register', { method: 'POST', body: { name: name, email: email, password: pw, lga: $('rLga').value, age: $('rAge').value, sex: $('rSex').value } })
       .then(CL.signIn)
       .catch(function (x) { rErr.textContent = x.message; CL.busy($('rSubmit'), false); });
   });

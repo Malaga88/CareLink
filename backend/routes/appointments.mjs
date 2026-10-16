@@ -5,13 +5,14 @@ import Doctor from '../models/Doctor.mjs';
 import BookingEvent from '../models/BookingEvent.mjs';
 import { authenticate, requireRole } from '../middleware/auth.mjs';
 import { SLOTS } from '../lib/constants.mjs';
+import { joinState, joinUrl } from '../lib/video.mjs';
 import { HttpError, addDays, isISODate, isNonEmptyString, todayISO, weekdayOf } from '../lib/utils.mjs';
 
 const router = Router();
 router.use(authenticate, requireRole('patient'));
 
 const view = (a) => ({
-    id: a._id, date: a.date, slot: a.slot, status: a.status, reason: a.reason, department: a.department,
+    id: a._id, date: a.date, slot: a.slot, status: a.status, reason: a.reason, department: a.department, ...joinState(a),
     doctor: { id: a.doctor?._id, name: a.doctor?.user?.name },
     facility: { id: a.facility?._id, name: a.facility?.name },
 });
@@ -28,8 +29,9 @@ router.post('/', async (req, res) => {
     if (date <= today) throw new HttpError(400, 'Choose a date after today');
     if (date > addDays(today, 60)) throw new HttpError(400, 'Appointments can be booked up to 60 days ahead');
 
-    const doctor = await Doctor.findById(doctorId);
+    const doctor = await Doctor.findById(doctorId).populate('user', 'active');
     if (!doctor) throw new HttpError(404, 'Doctor not found');
+    if (!doctor.user?.active) throw new HttpError(400, 'This doctor is not taking appointments');
     if (!doctor.days.includes(weekdayOf(date))) throw new HttpError(400, 'This doctor does not see patients on that day');
 
     // A patient cannot hold two appointments at the same date and time.
@@ -58,6 +60,14 @@ router.get('/mine', async (req, res) => {
         .populate(populate).lean();
     list.sort((a, b) => (a.date === b.date ? SLOTS.indexOf(a.slot) - SLOTS.indexOf(b.slot) : a.date < b.date ? -1 : 1));
     res.json({ appointments: list.map(view) });
+});
+
+// Returns the video-room link, only for the patient who owns the appointment and only inside the join window.
+router.get('/:id/join', async (req, res) => {
+    if (!mongoose.isValidObjectId(req.params.id)) throw new HttpError(400, 'Invalid appointment');
+    const appt = await Appointment.findOne({ _id: req.params.id, patient: req.user._id });
+    if (!appt) throw new HttpError(404, 'Appointment not found');
+    res.json({ url: await joinUrl(appt) });
 });
 
 router.patch('/:id/cancel', async (req, res) => {

@@ -4,12 +4,15 @@
   "description": "CareLink Bauchi telemedicine platform API (Express 5 + MongoDB/Mongoose)",
   "main": "server.mjs",
   "type": "module",
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "start": "node server.mjs",
     "dev": "nodemon server.mjs",
-    "seed": "node scripts/seed.mjs",
-    "test": "node --test test/api.test.mjs"
+    "test": "node --test test/api.test.mjs",
+    "create-admin": "node scripts/create-admin.mjs",
+    "purge-demo": "node scripts/purge-demo-data.mjs"
   },
   "license": "ISC",
   "dependencies": {

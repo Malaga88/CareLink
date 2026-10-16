@@ -3,6 +3,7 @@
   CL.shell('admin_dashboard.html');
   var $ = function (id) { return document.getElementById(id); };
   $('sub').textContent = (u.role === 'officer' ? 'Bauchi State Ministry of Health' : u.name) + ' \u00b7 All facilities';
+  if (u.role === 'officer') { var n = document.createElement('a'); n.className = 'btn-ghost btn-sm'; n.href = 'users.html'; n.textContent = 'Manage users & facilities'; n.style.marginRight = '8px'; document.querySelector('.topbar-right').insertBefore(n, document.querySelector('.topbar-right').firstChild); }
   var cls = { 'Pending': 'tag-amber', 'Accepted': 'tag-green', 'In transit': 'tag-blue' };
 
   function kpis(s) {

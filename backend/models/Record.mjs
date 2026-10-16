@@ -10,7 +10,8 @@ const recordSchema = new mongoose.Schema({
     statusLabel: { type: String, default: 'Recorded' },
     statusTone: { type: String, enum: ['green', 'blue', 'amber'], default: 'blue' },
     note: { type: String, trim: true, maxlength: 4000, default: '' },
-    consultation: { type: mongoose.Schema.Types.ObjectId, ref: 'Consultation', unique: true, sparse: true },
+    consultation: { type: mongoose.Schema.Types.ObjectId, ref: 'Consultation', unique: true, sparse: true },     // the Visit record made from a consultation
+    rxConsultation: { type: mongoose.Schema.Types.ObjectId, ref: 'Consultation', unique: true, sparse: true },   // the Prescription record made from it
 }, { timestamps: true });
 
 export default mongoose.model('Record', recordSchema);

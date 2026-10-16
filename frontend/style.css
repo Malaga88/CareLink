@@ -213,3 +213,24 @@ details.rec summary::-webkit-details-marker{display:none}
 .demo-accounts summary{cursor:pointer;font-weight:600;color:var(--teal)}
 .demo-accounts ul{margin:6px 0 0 18px}
 .demo-accounts code{background:#EAF4F2;padding:1px 5px;border-radius:4px}
+
+/* Users & facilities */
+.days{display:flex;flex-wrap:wrap;gap:6px}
+.days label{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid var(--field);border-radius:8px;font-size:13.5px;background:#fff;margin:0;font-weight:600;color:#3E5854;cursor:pointer}
+.days input{width:auto;margin:0}
+.days label:has(input:checked){background:var(--teal);border-color:var(--teal);color:#fff}
+.secret{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:20px;letter-spacing:.04em;background:#F5F9F8;border:1px dashed var(--teal);border-radius:10px;padding:14px;text-align:center;user-select:all;word-break:break-all}
+td .btn-ghost+.btn-ghost{margin-left:6px}
+.tag-grey{background:#ECEFEE;color:#51615E}
+[hidden]{display:none!important}
+
+/* Final polish */
+.points{list-style:none;margin-top:34px;display:grid;gap:12px;max-width:380px}
+.points li{padding-left:22px;position:relative;color:#D3E8E4;font-size:15px}
+.points li:before{content:"";position:absolute;left:0;top:8px;width:9px;height:9px;border-radius:50%;background:#F2B872}
+.appt-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.appt-row:last-child{border-bottom:none}
+.appt-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.hero .btn-ghost{background:transparent;color:#fff;border-color:#4C8A85}
+.hero .btn-ghost:hover{background:#0B4A46}
+.hero .note{color:#A9CBC6}

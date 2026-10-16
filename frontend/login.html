@@ -9,13 +9,12 @@
         <div><div class="brand-name" style="color:#fff">CareLink Bauchi</div><div class="brand-sub">Telemedicine &amp; Records Platform</div></div>
       </div>
       <p class="tagline">One record, <b>every facility</b> across Bauchi State.</p>
-      <div class="stats">
-        <div class="stat">20<span>LGAs planned</span></div>
-        <div class="stat">1,300+<span>Facilities to connect</span></div>
-        <div class="stat">Remote<span>Consultation by appointment</span></div>
-      </div>
+      <ul class="points">
+        <li>Book a doctor at a facility near you</li>
+        <li>See your visits and prescriptions in one place</li>
+        <li>Meet your doctor by video at your appointment time</li>
+      </ul>
     </div>
-    <div class="foot-note">Prototype for ATBUTH and general hospitals across Bauchi State.</div>
   </div>
   <main class="login-right" id="main">
     <div class="form-card">
@@ -33,17 +32,7 @@
       </form>
       <div class="divider"></div>
       <p class="note">New patient? <button type="button" class="linklike" id="openRegister">Create an account</button></p>
-      <p class="note" style="margin-top:6px">Staff accounts are created by your facility admin.</p>
-      <details class="demo-accounts">
-        <summary>Demo accounts</summary>
-        <p class="note">After running <code>npm run seed</code> in the backend, sign in with the password you set as <code>SEED_PASSWORD</code>:</p>
-        <ul class="note">
-          <li>Patient: amina.ibrahim@carelink.example</li>
-          <li>Doctor: bello.suleiman@carelink.example</li>
-          <li>Nurse/Admin: zainab.musa@carelink.example</li>
-          <li>Health Officer: officer@carelink.example</li>
-        </ul>
-      </details>
+      <p class="note" style="margin-top:6px">Doctors and staff receive their account from a Health Officer. Forgot your password? Ask your Health Officer to reset it.</p>
     </div>
   </main>
 </div>
@@ -54,8 +43,12 @@
     <p class="note" style="margin-bottom:14px">You will get a patient ID after signing up.</p>
     <div class="field"><label for="rName">Full name</label><input id="rName" autocomplete="name" maxlength="80" required></div>
     <div class="field"><label for="rEmail">Email address</label><input id="rEmail" type="email" autocomplete="email" required></div>
-    <div class="field"><label for="rPw">Password (8+ characters)</label><input id="rPw" type="password" autocomplete="new-password" minlength="8" required></div>
-    <div class="field"><label for="rLga">Local government area</label><input id="rLga" maxlength="60" placeholder="e.g. Ningi"></div>
+    <div class="field"><label for="rPw">Password (10+ characters)</label><input id="rPw" type="password" autocomplete="new-password" minlength="10" required></div>
+    <div class="form-grid">
+      <div class="field"><label for="rLga">Local government area</label><select id="rLga" required></select></div>
+      <div class="field"><label for="rAge">Age (optional)</label><input id="rAge" type="number" min="0" max="120" inputmode="numeric"></div>
+    </div>
+    <div class="field"><label for="rSex">Sex (optional)</label><select id="rSex"><option value="">Prefer not to say</option><option value="F">Female</option><option value="M">Male</option></select></div>
     <p class="error" id="rErr" role="alert"></p>
     <div class="dlg-actions"><button class="btn-ghost" type="button" id="rCancel">Cancel</button><button class="btn" type="submit" id="rSubmit">Create account</button></div>
   </form>

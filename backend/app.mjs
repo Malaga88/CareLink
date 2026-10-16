@@ -11,6 +11,7 @@ import recordsRouter from './routes/records.mjs';
 import doctorRouter from './routes/doctor.mjs';
 import referralsRouter from './routes/referrals.mjs';
 import reportsRouter from './routes/reports.mjs';
+import adminRouter from './routes/admin.mjs';
 import { apiLimiter } from './middleware/rateLimiters.mjs';
 import { responseTimer } from './middleware/metrics.mjs';
 
@@ -56,6 +57,7 @@ export function createApp() {
     app.use('/api/doctor', doctorRouter);
     app.use('/api/referrals', referralsRouter);
     app.use('/api/reports', reportsRouter);
+    app.use('/api/admin', adminRouter);
     app.use('/api', (req, res) => res.status(404).json({ message: 'Route not found' }));
 
     // Same-origin hosting of the static frontend (only ../frontend is exposed, never backend files).

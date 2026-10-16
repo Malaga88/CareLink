@@ -13,6 +13,7 @@ const appointmentSchema = new mongoose.Schema({
     // Conflict guard: "<doctorId>|<date>|<slot>" while the slot is held, removed when cancelled.
     // The unique sparse index makes double-booking impossible even for simultaneous requests.
     slotKey: { type: String, unique: true, sparse: true },
+    videoRoom: { type: String },   // random room name for the video consultation (created on first join)
 }, { timestamps: true });
 
 appointmentSchema.index({ patient: 1, date: 1 });

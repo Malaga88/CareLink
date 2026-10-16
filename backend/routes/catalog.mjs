@@ -5,7 +5,7 @@ import Doctor from '../models/Doctor.mjs';
 import Appointment from '../models/Appointment.mjs';
 import { authenticate } from '../middleware/auth.mjs';
 import { SLOTS } from '../lib/constants.mjs';
-import { HttpError, isISODate } from '../lib/utils.mjs';
+import { HttpError, bookableDates, isISODate } from '../lib/utils.mjs';
 
 const router = Router();
 router.get('/facilities', authenticate, async (req, res) => {
@@ -14,10 +14,10 @@ router.get('/facilities', authenticate, async (req, res) => {
 });
 
 router.get('/doctors', authenticate, async (req, res) => {
-    const doctors = await Doctor.find().populate('user', 'name').populate('facility', 'name shortName').lean();
+    const doctors = await Doctor.find().populate('user', 'name active').populate('facility', 'name shortName').lean();
     res.json({
-        doctors: doctors.filter((d) => d.user && d.facility).map((d) => ({
-            id: d._id, name: d.user.name, department: d.department, days: d.days,
+        doctors: doctors.filter((d) => d.user?.active && d.facility).map((d) => ({
+            id: d._id, name: d.user.name, department: d.department, days: d.days, dates: bookableDates(d.days),
             facilityId: d.facility._id, facility: d.facility.name,
         })),
     });
